@@ -1,0 +1,17 @@
+{
+  "name": "bnsly",
+  "version": "1.0.0",
+  "description": "URL shortener using the bnsly.co domain",
+  "main": "index.js",
+  "git repository": "git@github.com:supersimple/url-generator.git",
+  "test command": "make test",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "todd resudek <toddresudek@gmail.com>",
+  "license": "MIT"
+}
