@@ -2,7 +2,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var router = require("./router");
 
 // Load config for RethinkDB and express
 var config = require(__dirname+"/config.js")
@@ -36,11 +35,18 @@ app.get('/', function(request, response){
 });
 
 app.get('/add/:uri', function(request, response){
-  var guid = shortid.generate();
-  var expires = new Date(); expires.setDate(expires.getDate()+1);
-  var uri = new Url({"guid": guid, "url": request.params.uri, "expires_at": expires })
-  uri.save().then(function(result){
-    response.json(result);
+  //first, see if this url exists - if so, dont generate a new guid
+  var existing_uri = Url.filter({"url": request.params.uri}).run().then(function(result){
+    if(result.length > 0){
+      response.json(result);
+    }else{
+      var guid = shortid.generate();
+      var expires = new Date(); expires.setDate(expires.getDate()+1);
+      var uri = new Url({"guid": guid, "url": request.params.uri, "expires_at": expires })
+      uri.save().then(function(result){
+        response.json(result);
+      });
+    }
   });
 });
 
