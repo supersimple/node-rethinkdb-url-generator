@@ -55,12 +55,24 @@ app.get('/:guid', function(request, response){
   var uri = Url.filter({"guid": guid}).update({clicks: r.row("clicks").add(1)}).run().then(function(result){
     //increment the clicks column
     //redirect user to the returned url
-    response.writeHead(301, {
-      'Location': result[0].url
-    });
+    if(response.length > 0){
+      response.writeHead(301, {
+        'Location': result[0].url
+      });
     response.end();
-  });
+    }else{
+      response.send('That link does not exist.\n')
+    }
+  }).error(handleError(response));
 });
+
+
+function handleError(res) {
+    return function(error) {
+        return res.send(500, {error: error.message});
+    }
+}
+
 
 app.listen(config.express.port, function(){
   console.log('listening on port '+config.express.port);
