@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
+    "node-crontab": "0.0.8",
     "request": "^2.65.0",
     "shortid": "^2.2.4",
     "thinky": "^2.1.12"

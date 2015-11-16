@@ -61,11 +61,19 @@ app.get('/:guid', function(request, response){
       });
     response.end();
     }else{
-      response.send('That link does not exist.\n')
+      response.writeHead(404, {"Content-Type": "text/plain"});
+      response.write("That link does not exist\n");
+      response.end();
     }
   }).error(handleError(response));
 });
 
+function deleteExpiredLinks(){
+  Url.filter(function(url) {
+       return url("expires_at").date().eq(r.now().date())
+             .and(url("expires_at").hours().eq(r.now().hours()))
+  }).delete();
+}
 
 function handleError(res) {
     return function(error) {
@@ -73,6 +81,11 @@ function handleError(res) {
     }
 }
 
+
+var crontab = require('node-crontab');
+var jobId = crontab.scheduleJob("30 * * * *", function(){ //This will call this function every hour//
+  deleteExpiredLinks();
+});
 
 app.listen(config.express.port, function(){
   console.log('listening on port '+config.express.port);
