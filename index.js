@@ -59,7 +59,7 @@ app.get('/:guid', function(request, response){
       response.writeHead(301, {
         'Location': result[0].url
       });
-    response.end();
+      response.end();
     }else{
       response.writeHead(404, {"Content-Type": "text/plain"});
       response.write("That link does not exist\n");
