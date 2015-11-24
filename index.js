@@ -31,7 +31,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser());
 
 app.get('/', function(request, response){
-  response.send('received');
+  response.sendFile('./index.html');
 });
 
 app.get('/add/:uri', function(request, response){
@@ -55,7 +55,8 @@ app.get('/:guid', function(request, response){
   var uri = Url.filter({"guid": guid}).update({clicks: r.row("clicks").add(1)}).run().then(function(result){
     //increment the clicks column
     //redirect user to the returned url
-    if(response.length > 0){
+    console.log(result.length)
+    if(result.length > 0){
       response.writeHead(301, {
         'Location': result[0].url
       });

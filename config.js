@@ -6,6 +6,6 @@ module.exports = {
         db: "bnsly"
     },
     express: {
-        port: 3000
+      port: 7171
     }
 }
