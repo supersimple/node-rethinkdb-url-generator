@@ -1,3 +1,6 @@
+//javascript:void((function()%7Bvar p=document.createElement('script');p.setAttribute('type','text/javascript');p.setAttribute('charset','UTF-8');p.setAttribute('src','//bnsly.co/bookmarklet.js?r='+Math.random()*61833112);document.body.appendChild(p)%7D)());
+
+
 (function(){
 
   /*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
