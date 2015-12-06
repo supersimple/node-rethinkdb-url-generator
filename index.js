@@ -41,7 +41,25 @@ app.get('/add/:uri', function(request, response){
       response.json(result);
     }else{
       var guid = shortid.generate();
-      var expires = new Date(); expires.setDate(expires.getDate()+1);
+      //var expires = new Date(); expires.setDate(expires.getDate()+1);
+      var expires = null;
+      var uri = new Url({"guid": guid, "url": request.params.uri, "expires_at": expires })
+      uri.save().then(function(result){
+        response.json(result);
+      });
+    }
+  });
+});
+
+app.get('/add/:expire_days/:uri', function(request, response){
+  //first, see if this url exists - if so, dont generate a new guid
+  var existing_uri = Url.filter({"url": request.params.uri}).run().then(function(result){
+    if(result.length > 0){
+      response.json(result);
+    }else{
+      var guid = shortid.generate();
+      var expires = new Date(); expires.setDate(expires.getDate()+parseInt(request.params.expire_days));
+      console.log(expires, request.params.expire_days)
       var uri = new Url({"guid": guid, "url": request.params.uri, "expires_at": expires })
       uri.save().then(function(result){
         response.json(result);
