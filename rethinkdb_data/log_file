@@ -1,8 +1,0 @@
-2015-11-10T23:27:55.492894000 0.352383s notice: Recursively removing directory /Users/toddresudek/NODES/bnsly/rethinkdb_data/tmp
-2015-11-10T23:27:55.495346000 0.354839s notice: Initializing directory /Users/toddresudek/NODES/bnsly/rethinkdb_data
-2015-11-10T23:27:55.495414000 0.354903s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/toddresudek/NODES/bnsly/rethinkdb_data' did not already exist or is empty.)
-2015-11-10T23:27:55.495444000 0.354933s notice: Running rethinkdb 2.1.4 (CLANG 7.0.0 (clang-700.0.72))...
-2015-11-10T23:27:55.513750000 0.373240s notice: Running on Darwin 15.0.0 x86_64
-2015-11-10T23:27:55.513796000 0.373285s notice: Loading data from directory /Users/toddresudek/NODES/bnsly/rethinkdb_data
-2015-11-10T23:27:55.627487000 0.486977s info: Automatically using cache size of 727 MB
-2015-11-10T23:27:55.627937000 0.487426s error: TCP socket creation failed for port 29015: Address already in use.
