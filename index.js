@@ -8,7 +8,6 @@ var config = require(__dirname+"/config.js")
 var shortid = require('shortid');
 
 // Import rethinkdbdash
-//var thinky = require('thinky')(config.rethinkdb);
 var thinky = require('thinky')(config.rethinkdb);
 var r = thinky.r;
 var type = thinky.type;
