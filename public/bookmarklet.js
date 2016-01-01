@@ -1,4 +1,4 @@
-//javascript:void((function()%7Bvar p=document.createElement('script');p.setAttribute('type','text/javascript');p.setAttribute('charset','UTF-8');p.setAttribute('src','//bnsly.co/bookmarklet.js?r='+Math.random()*61833112);document.body.appendChild(p)%7D)());
+//javascript:void((function()%7Bvar p=document.createElement('script');p.setAttribute('type','text/javascript');p.setAttribute('charset','UTF-8');p.setAttribute('src','//shorturl.co/bookmarklet.js?r='+Math.random()*61833112);document.body.appendChild(p)%7D)());
 
 
 (function(){
@@ -11,11 +11,11 @@
  
  
 var bkmklt = {
-  base_url : 'http://bnsly.co/',
+  base_url : 'http://shorturl.co/',
   doc : top.document,
-  cont : top.document.getElementById("bnsly_container"),
-  cls : top.document.getElementById("bnsly_close"),
-  script : top.document.getElementById("bnsly_js"),
+  cont : top.document.getElementById("shorturl_container"),
+  cls : top.document.getElementById("shorturl_close"),
+  script : top.document.getElementById("shorturl_js"),
   u : encodeURIComponent(window.location.href.toString()),
   inner_cont : null,
   modal : null,
@@ -27,38 +27,38 @@ var bkmklt = {
   
   createContainers : function(){
     var cont = top.document.createElement("div");
-    cont.setAttribute("id","bnsly_container");
+    cont.setAttribute("id","shorturl_container");
     cont.cssText = cont.style.cssText = "z-index:99999999;position:fixed;top:0;left:0;width:100%;height:100%;background-color:#fff;background-color:rgba(255,255,255,0.925);";
     top.document.body.appendChild(cont);
     
     var inner_cont = top.document.createElement("div");
-    inner_cont.setAttribute("id","bnsly_inner_container");
+    inner_cont.setAttribute("id","shorturl_inner_container");
     inner_cont.cssText = inner_cont.style.cssText = "padding:0 0 10px 10px;overflow:scroll;height:100%";
     cont.appendChild(inner_cont);
     this.inner_cont = inner_cont;
     
     var modal = top.document.createElement("div");
-    modal.setAttribute("id","bnsly_modal_container");
+    modal.setAttribute("id","shorturl_modal_container");
     modal.cssText = inner_cont.style.cssText = "padding:0 0 10px 10px;width:300px;height:120px;position:absolute; top:50%; left:50%; margin-left: -150px; margin-top:-60px; background-color: rgba(25,25,25,0.8); border-radius: 6px;box-shadow: rgba(0,0,0,.33) 0px 0px 5px 0px;";
     this.inner_cont.appendChild(modal);
     this.modal = modal;
     
     var cls = top.document.createElement("a");
-    cls.setAttribute("id","bnsly_close");
-    cls.setAttribute("onclick", "top.document.body.removeChild(top.document.getElementById('bnsly_container'))");
+    cls.setAttribute("id","shorturl_close");
+    cls.setAttribute("onclick", "top.document.body.removeChild(top.document.getElementById('shorturl_container'))");
     cls.innerText = 'Close'; cls.textContent = 'Close';
     cls.cssText = cls.style.cssText = "position:absolute;top:0px;right:0px;display:block;height:30px !important;padding:0 10px !important; color:#fff !important;line-height:30px !important;font-size:11px !important;font-family:Arial,Helvetica,sans-serif  !important;font-weight:bold !important;cursor:pointer;";
     this.modal.appendChild(cls);
     
     var hdln = top.document.createElement("h3");
-    hdln.setAttribute("id","bnsly_headline");
-    hdln.setAttribute("onclick", "top.document.body.removeChild(top.document.getElementById('bnsly_container'))");
-    hdln.innerText = 'bnsly.co url'; hdln.textContent = 'bnsly.co url';
+    hdln.setAttribute("id","shorturl_headline");
+    hdln.setAttribute("onclick", "top.document.body.removeChild(top.document.getElementById('shorturl_container'))");
+    hdln.innerText = 'shorturl.co url'; hdln.textContent = 'shorturl.co url';
     hdln.cssText = hdln.style.cssText = "position:absolute;top:24px;left:10px;display:block;height:26px !important;margin:0;padding:0 10px !important; color:#fff !important;line-height:26px !important;font-size:16px !important;font-family:Arial,Helvetica,sans-serif  !important;font-weight:bold !important;";
     this.modal.appendChild(hdln);
     
     var input = top.document.createElement("input");
-    input.setAttribute("id","bnsly_guid");
+    input.setAttribute("id","shorturl_guid");
     input.setAttribute("type", "text");
     input.cssText = input.style.cssText = "position:relative;top:50px;left:10px;display:block;height:30px !important; width:256px !important;padding:0 10px !important; color:#333 !important;line-height:30px !important;font-size:11px !important;font-family:Arial,Helvetica,sans-serif  !important;";
     this.modal.appendChild(input);
@@ -74,9 +74,9 @@ var bkmklt = {
   
   loadJson : function(base_url){
     
-    $.getJSON( "//bnsly.co/add/"+ this.u, function( response ) {
+    $.getJSON( "//shorturl.co/add/"+ this.u, function( response ) {
       var resp = response[0] ? response[0] : response
-      $("#bnsly_guid").val( base_url + resp.guid);
+      $("#shorturl_guid").val( base_url + resp.guid);
     });
   },
 
