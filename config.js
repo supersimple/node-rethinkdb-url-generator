@@ -7,5 +7,6 @@ module.exports = {
     },
     express: {
       port: 7171
-    }
+    },
+    valid_tokens: ['9nI7UeQa8WhbfZEzQFXWGYlLYLltAjfQ']
 }

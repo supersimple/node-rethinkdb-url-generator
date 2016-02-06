@@ -29,8 +29,22 @@ Url.ensureIndex("guid");
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser());
 
+app.set('views', __dirname+'/views');
+app.set('view engine', 'jade');
+
+app.get('/admin', function(req, res) {
+  var links = Url.orderBy({index: 'createdAt'}).run().then(function(result){
+    res.render('admin.jade', {title: '*****URL shortener*****', links: result});
+  });
+});
+
 app.get('/', function(request, response){
   response.sendFile('./index.html');
+});
+
+app.get('/admin/all', function(request, response){
+  //this should be protected by login
+  response.sendFile('./admin.html');
 });
 
 app.get('/add/:uri', function(request, response){
@@ -83,6 +97,8 @@ app.get('/:guid', function(request, response){
     }
   }).error(handleError(response));
 });
+
+
 
 function deleteExpiredLinks(){
   Url.filter(function(url) {
