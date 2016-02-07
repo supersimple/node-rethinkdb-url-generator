@@ -51,7 +51,7 @@ app.get('/add/:uri', function(request, response){
   //first, see if this url exists - if so, dont generate a new guid
   var existing_uri = Url.filter({"url": request.params.uri}).run().then(function(result){
     if(result.length > 0){
-      response.json(result);
+      response.json(result[0]);
     }else{
       var guid = shortid.generate();
       var expires = null;
@@ -67,7 +67,7 @@ app.get('/add/:expire_days/:uri', function(request, response){
   //first, see if this url exists - if so, dont generate a new guid
   var existing_uri = Url.filter({"url": request.params.uri}).run().then(function(result){
     if(result.length > 0){
-      response.json(result);
+      response.json(result[0]);
     }else{
       var guid = shortid.generate();
       var expires = new Date(); expires.setDate(expires.getDate()+parseInt(request.params.expire_days));
@@ -84,7 +84,6 @@ app.get('/:guid', function(request, response){
   var uri = Url.filter({"guid": guid}).update({clicks: r.row("clicks").add(1)}).run().then(function(result){
     //increment the clicks column
     //redirect user to the returned url
-    console.log(result.length)
     if(result.length > 0){
       response.writeHead(301, {
         'Location': result[0].url
@@ -92,13 +91,26 @@ app.get('/:guid', function(request, response){
       response.end();
     }else{
       response.writeHead(404, {"Content-Type": "text/plain"});
-      response.write("That link does not exist\n");
+      response.write(JSON.stringify({"error": "That link does not exist"}));
       response.end();
     }
   }).error(handleError(response));
 });
 
-
+app.get('/lookup/:guid', function(request, response){
+  var guid = request.params.guid;  
+  var uri = Url.filter({"guid": guid}).run().then(function(result){
+    if(result.length > 0){
+      response.writeHead(200, {"Content-Type": "application/json"});
+      response.write(JSON.stringify({"url": result[0].url}));
+      response.end();
+    }else{
+      response.writeHead(404, {"Content-Type": "application/json"});
+      response.write(JSON.stringify({"error": "That link does not exist"}));
+      response.end();
+    }
+  }).error(handleError(response));
+});
 
 function deleteExpiredLinks(){
   Url.filter(function(url) {
