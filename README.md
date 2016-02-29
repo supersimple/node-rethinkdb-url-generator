@@ -10,4 +10,5 @@ The bookmarklet.js file is also required. The bookmarklet link injects that java
 ### Future Releases ###
 * Create a secure web interface to view the links and analytics.
 * An easier way to set everything up.
-* Build out tests
+* Complete react.js implementation
+* Build out jasmine tests
