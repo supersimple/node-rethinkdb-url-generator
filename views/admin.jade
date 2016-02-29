@@ -15,8 +15,25 @@ html.no-js(lang='en')
         meta(name="description", content=description)
         meta(name="author", content=author)
         meta(name="viewport", content='width=device-width, initial-scale=1')
-
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js")
+          
     body
-      p=JSON.stringify(links)
-            footer
+      table
+        tr
+          td Clicks
+          td Created
+          td Expires
+          td GUID
+          td ID
+          td URL
+        each link, i in links
+                tr
+                  td #{link.clicks}
+                  td #{link.createdAt}
+                  td #{link.expires_at}
+                  td #{link.guid}
+                  td #{link.id}
+                  td #{link.url}
+      footer
                 

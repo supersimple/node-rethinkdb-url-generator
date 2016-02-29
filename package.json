@@ -13,7 +13,10 @@
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
     "jade": "^1.11.0",
+    "jasmine": "^2.4.1",
+    "materialize-css": "^0.97.5",
     "node-crontab": "0.0.8",
+    "react": "^0.14.7",
     "request": "^2.65.0",
     "shortid": "^2.2.4",
     "thinky": "^2.1.12"

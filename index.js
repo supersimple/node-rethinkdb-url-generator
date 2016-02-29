@@ -1,39 +1,21 @@
 // Import express and co
 var express = require('express');
-var bodyParser = require('body-parser');
 var app = express();
 
 // Load config for RethinkDB and express
 var config = require(__dirname+"/config.js")
 var shortid = require('shortid');
 
-// Import rethinkdbdash
-var thinky = require('thinky')(config.rethinkdb);
-var r = thinky.r;
-var type = thinky.type;
-
-// Create the model
-var Url = thinky.createModel("urls", {
-    id: type.string(),
-    guid: type.string(),
-    url: type.string(),
-    clicks: type.number().default(0),
-    expires_at: type.date(),
-    createdAt: type.date().default(r.now())
-});
-
-// Ensure that an index createdAt exists
-Url.ensureIndex("createdAt");
-Url.ensureIndex("guid");
+var Model = require('./model')(config)
+var React = require('react');
 
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser());
 
 app.set('views', __dirname+'/views');
 app.set('view engine', 'jade');
 
 app.get('/admin', function(req, res) {
-  var links = Url.orderBy({index: 'createdAt'}).run().then(function(result){
+  var links = Model.orderBy({index: 'createdAt'}).run().then(function(result){
     res.render('admin.jade', {title: '*****URL shortener*****', links: result});
   });
 });
@@ -42,20 +24,13 @@ app.get('/', function(request, response){
   response.sendFile('./index.html');
 });
 
-app.get('/admin/all', function(request, response){
-  //this should be protected by login
-  response.sendFile('./admin.html');
-});
-
 app.get('/add/:uri', function(request, response){
   //first, see if this url exists - if so, dont generate a new guid
-  var existing_uri = Url.filter({"url": request.params.uri}).run().then(function(result){
+  var existing_uri = Model.filter({"url": request.params.uri}).run().then(function(result){
     if(result.length > 0){
       response.json(result[0]);
     }else{
-      var guid = shortid.generate();
-      var expires = null;
-      var uri = new Url({"guid": guid, "url": request.params.uri, "expires_at": expires })
+      var uri = createRecord(request.params.uri, false);
       uri.save().then(function(result){
         response.json(result);
       });
@@ -65,13 +40,11 @@ app.get('/add/:uri', function(request, response){
 
 app.get('/add/:expire_days/:uri', function(request, response){
   //first, see if this url exists - if so, dont generate a new guid
-  var existing_uri = Url.filter({"url": request.params.uri}).run().then(function(result){
+  var existing_uri = Model.filter({"url": request.params.uri}).run().then(function(result){
     if(result.length > 0){
       response.json(result[0]);
     }else{
-      var guid = shortid.generate();
-      var expires = new Date(); expires.setDate(expires.getDate()+parseInt(request.params.expire_days));
-      var uri = new Url({"guid": guid, "url": request.params.uri, "expires_at": expires })
+      var uri = createRecord(request.params.uri, request.params.expire_days);
       uri.save().then(function(result){
         response.json(result);
       });
@@ -81,7 +54,7 @@ app.get('/add/:expire_days/:uri', function(request, response){
 
 app.get('/:guid', function(request, response){
   var guid = request.params.guid;  
-  var uri = Url.filter({"guid": guid}).update({clicks: r.row("clicks").add(1)}).run().then(function(result){
+  var uri = Model.filter({"guid": guid}).update({clicks: r.row("clicks").add(1)}).run().then(function(result){
     //increment the clicks column
     //redirect user to the returned url
     if(result.length > 0){
@@ -99,7 +72,7 @@ app.get('/:guid', function(request, response){
 
 app.get('/lookup/:guid', function(request, response){
   var guid = request.params.guid;  
-  var uri = Url.filter({"guid": guid}).run().then(function(result){
+  var uri = Model.filter({"guid": guid}).run().then(function(result){
     if(result.length > 0){
       response.writeHead(200, {"Content-Type": "application/json"});
       response.write(JSON.stringify({"url": result[0].url}));
@@ -112,8 +85,9 @@ app.get('/lookup/:guid', function(request, response){
   }).error(handleError(response));
 });
 
+
 function deleteExpiredLinks(){
-  Url.filter(function(url) {
+  Model.filter(function(url) {
        return url("expires_at").date().eq(r.now().date())
              .and(url("expires_at").hours().eq(r.now().hours()))
   }).delete();
@@ -125,6 +99,16 @@ function handleError(res) {
     }
 }
 
+function createRecord(url, expires_at){
+  var guid = shortid.generate();
+  if(expires_at){
+    var expires = new Date(); expires.setDate(expires.getDate()+parseInt(expires_at));
+  }else{
+    var expires = null;
+  }
+
+  return new Model({"guid": guid, "url": url, "expires_at": expires })
+}
 
 var crontab = require('node-crontab');
 var jobId = crontab.scheduleJob("30 * * * *", function(){ //This will call this function every hour//
